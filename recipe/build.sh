@@ -61,7 +61,6 @@ bash configure --prefix=${PREFIX} \
                ${OPTS}
 
 cd swig/csharp
-mkdir dotnet
 
 if [[ $target_platform =~ linux.* ]]; then
   export LIBGDAL_=${PREFIX}/lib/$(ls ${PREFIX}/lib | egrep 'libgdal.so\...\..++')
@@ -92,12 +91,5 @@ cp .libs/*.dylib $PREFIX/lib || :
 cp .libs/*.so $PREFIX/lib || :
 cp dotnet $PREFIX/lib || :
 cp *.json $PREFIX/lib || :
-cp *.exe $PREFIX/bin || :
+cp *.exe $PREFIX/lib || :
 
-# Copy the [de]activate scripts to $PREFIX/etc/conda/[de]activate.d.
-# This will allow them to be run on environment activation.
-for CHANGE in "activate" "deactivate"
-do
-    mkdir -p "${PREFIX}/etc/conda/${CHANGE}.d"
-    cp "${RECIPE_DIR}/${CHANGE}.sh" "${PREFIX}/etc/conda/${CHANGE}.d/${PKG_NAME}_${CHANGE}.sh"
-done
