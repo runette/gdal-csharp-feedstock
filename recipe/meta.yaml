@@ -10,7 +10,7 @@ source:
   sha256: a7e1e414e5c405af48982bf4724a3da64a05770254f2ce8affb5f58a7604ca57
 
 build:
-  number: 1
+  number: 2
 
 requirements:
   build:
@@ -28,7 +28,7 @@ requirements:
 
 test:
   commands:
-    - mono $CONDA_PREFIX/bin/gdal_test.exe  # [not win]
+    - mono $CONDA_PREFIX/lib/gdal_test.exe  # [not win]
     - gdal_test  # [win]
 
 about:
