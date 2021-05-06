@@ -82,6 +82,10 @@ template.csproj:
     echo ^<Compile Include="%|fF.cs" /^> >>  %|fF.csproj
     echo ^</ItemGroup^> >>  %|fF.csproj
     echo ^</Project^> >>  %|fF.csproj
+	dotnet add %|fF.csproj reference ..\osr\osr_csharp.csproj
+    dotnet add %|fF.csproj reference ..\ogr\ogr_csharp.csproj
+	dotnet add %|fF.csproj reference ..\gdal\gdal_csharp.csproj
+    dotnet add %|fF.csproj package System.Drawing.Common
     dotnet publish -c $(DOTNET_CONFIG) --output . -r $(DOTNET_RID) %|fF.csproj --self-contained false
     cd ..
 !ELSE
