@@ -16,14 +16,22 @@ if errorlevel 1 exit 1
 nmake /f "%RECIPE_DIR%\makefile.vc" test
 if errorlevel 1 exit 1
 
+mkdir  %LIBRARY_BIN%\gcs
+
 copy /B *.dll %LIBRARY_BIN%
 if errorlevel 1 exit 1
 
-copy /B *.exe %LIBRARY_BIN%
+copy /B apps\*.exe %LIBRARY_BIN%\gcs
 if errorlevel 1 exit 1
 
-copy /B *.json %LIBRARY_BIN%
+copy /B apps\*.dll %LIBRARY_BIN%
 if errorlevel 1 exit 1
 
-copy /B *.pdb %LIBRARY_BIN%
+copy /B apps\*.json %LIBRARY_BIN%\gcs
+if errorlevel 1 exit 1
+
+copy /B apps\*.pdb %LIBRARY_BIN%\gcs
+if errorlevel 1 exit 1
+
+copy /B apps\gdal_test.* %LIBRARY_BIN%
 if errorlevel 1 exit 1

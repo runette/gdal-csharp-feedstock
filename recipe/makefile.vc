@@ -27,26 +27,16 @@ GDALLIB	= $(GDAL_ROOT)\$(GDAL_LIB_NAME)
 GDALLIB	= $(LIBRARY_LIB)\$(GDAL_LIB_NAME)
 !ENDIF
 
-!IFDEF MONO
-CSC = mcs
-!ELSE
 !IFNDEF NETSTANDARD
 NETSTANDARD = netstandard2.0
 !ENDIF
+
 !IFNDEF NETCORE
-NETCORE = netcoreapp2.1
+NETCORE = net5
 !ENDIF
-!IF $(MSVC_VER) >= 1400
-!IFDEF WIN64
-CSC = csc /platform:anycpu
+
+!IFNDEF DOTNET_RID
 DOTNET_RID = win-x64
-!ELSE
-CSC = csc /platform:x86
-DOTNET_RID = win-x86
-!ENDIF
-!ELSE
-CSC = csc
-!ENDIF
 !ENDIF
 
 !IF "$(DEBUG)" == "1"
@@ -57,13 +47,9 @@ CSDEBUG =
 DOTNET_CONFIG = Release
 !ENDIF
 
-!IF $(MSVC_VER) >= 1600
-CSC = $(CSC) /define:CLR4
-!ENDIF
-
 OBJ	=	gdal_wrap.obj gdalconst_wrap.obj ogr_wrap.obj osr_wrap.obj
 
-.SUFFIXES: .cs .csproj
+.SUFFIXES: .cs
 
 all: ogr_dir gdal_dir osr_dir const_dir gdal_csharp samples
 
@@ -82,21 +68,24 @@ template.csproj:
     echo > $@
 !ENDIF
 
-{apps}.cs{apps}.csproj:
+{apps}.cs{apps}.exe:
 !IFDEF NETCORE
-    echo ^<Project Sdk="Microsoft.NET.Sdk"^> > $@
-    echo ^<PropertyGroup^> >> $@
-    echo ^<OutputType^>Exe^</OutputType^> >> $@
-    echo ^<TargetFramework^>$(NETCORE)^</TargetFramework^> >> $@
-    echo ^<AssemblyVersion^>$(GDAL_VERSION).0^</AssemblyVersion^> >> $@
-    echo ^<EnableDefaultCompileItems^>false^</EnableDefaultCompileItems^>  >> $@
-    echo ^</PropertyGroup^> >> $@
-    echo ^<ItemGroup^> >> $@
-    echo ^<Compile Include="$(<F)" /^> >> $@
-    echo ^</ItemGroup^> >> $@
-    echo ^</Project^> >> $@
+    cd apps
+    echo ^<Project Sdk="Microsoft.NET.Sdk"^> > %|fF.csproj
+    echo ^<PropertyGroup^> >>  %|fF.csproj
+    echo ^<OutputType^>Exe^</OutputType^> >>  %|fF.csproj
+    echo ^<TargetFramework^>$(NETCORE)^</TargetFramework^> >>  %|fF.csproj
+    echo ^<AssemblyVersion^>$(GDAL_VERSION).0^</AssemblyVersion^> >>  %|fF.csproj
+    echo ^<EnableDefaultCompileItems^>false^</EnableDefaultCompileItems^>  >>  %|fF.csproj
+    echo ^</PropertyGroup^> >>  %|fF.csproj
+    echo ^<ItemGroup^> >>  %|fF.csproj
+    echo ^<Compile Include="%|fF.cs" /^> >>  %|fF.csproj
+    echo ^</ItemGroup^> >>  %|fF.csproj
+    echo ^</Project^> >>  %|fF.csproj
+    dotnet publish -c $(DOTNET_CONFIG) --output . -r $(DOTNET_RID) %|fF.csproj --self-contained false
+    cd ..
 !ELSE
-    echo > $@
+    msc $(CSDEBUG) /r:ogr_csharp.dll /r:osr_csharp.dll /r:gdal_csharp.dll /r:System.Drawing.dll /out:%|fF.exe apps\%|fF.cs
 !ENDIF
 
 gdal_csharp: template.csproj
@@ -120,10 +109,10 @@ gdal_csharp: template.csproj
     dotnet build -c $(DOTNET_CONFIG) -o "." -r $(DOTNET_RID)
     cd ..
 !ELSE
-    $(CSC) $(CSDEBUG) /unsafe /target:library /out:osr_csharp.dll osr\*.cs AssemblyInfo.cs
-    $(CSC) $(CSDEBUG) /unsafe /target:library /out:ogr_csharp.dll /r:osr_csharp.dll ogr\*.cs AssemblyInfo.cs
-    $(CSC) $(CSDEBUG) /unsafe /target:library /out:gdal_csharp.dll /r:ogr_csharp.dll /r:osr_csharp.dll gdal\*.cs AssemblyInfo.cs
-    $(CSC) $(CSDEBUG) /unsafe /target:library /out:gdalconst_csharp.dll const\*.cs AssemblyInfo.cs
+    msc $(CSDEBUG) /unsafe /target:library /out:osr_csharp.dll osr\*.cs AssemblyInfo.cs
+    msc $(CSDEBUG) /unsafe /target:library /out:ogr_csharp.dll /r:osr_csharp.dll ogr\*.cs AssemblyInfo.cs
+    msc $(CSDEBUG) /unsafe /target:library /out:gdal_csharp.dll /r:ogr_csharp.dll /r:osr_csharp.dll gdal\*.cs AssemblyInfo.cs
+    msc $(CSDEBUG) /unsafe /target:library /out:gdalconst_csharp.dll const\*.cs AssemblyInfo.cs
 !ENDIF
     link /dll $(OGR_INCLUDE) $(BASE_INCLUDE) ogr_wrap.obj \
 		$(EXTERNAL_LIBS) $(GDALLIB)\
@@ -179,133 +168,34 @@ interface:
 	$(SWIG) -DSWIG2_CSHARP -c++ -csharp -namespace OSGeo.OGR -dllimport ogr_wrap -I../../include/csharp -o ogr_wrap.cpp ../../include/ogr.i
 	cd ..
 
-# added gdal_test   
-sampleprojects: apps/ogrinfo.csproj apps/createdata.csproj apps/OSRTransform.csproj apps/GDALRead.csproj apps/GDALReadDirect.csproj apps/GDALAdjustContrast.csproj apps/GDALDatasetRasterIO.csproj apps/GDALDatasetRasterIOEx.csproj apps/GDALWrite.csproj apps/GDALDatasetWrite.csproj apps/GDALColorTable.csproj apps/WKT2WKB.csproj apps/OGRGEOS.csproj apps/ReadXML.csproj apps/GDALInfo.csproj apps/GDALOverviews.csproj apps/GDALCreateCopy.csproj apps/GDALGetHistogram.csproj apps/VSIMem.csproj apps/GDALMemDataset.csproj apps/OGRLayerAlg.csproj apps/OGRFeatureEdit.csproj apps/GDALWarp.csproj apps/GetCRSInfo.csproj apps/gdal_test.csproj
 
-samples: sampleprojects
-!IFDEF NETSTANDARD
-    cd apps
-    dotnet add ogrinfo.csproj reference ..\osr\osr_csharp.csproj
-    dotnet add ogrinfo.csproj reference ..\ogr\ogr_csharp.csproj
-    dotnet build -c $(DOTNET_CONFIG) -o "." -r $(DOTNET_RID) ogrinfo.csproj
-    dotnet add createdata.csproj reference ..\osr\osr_csharp.csproj
-    dotnet add createdata.csproj reference ..\ogr\ogr_csharp.csproj
-    dotnet build -c $(DOTNET_CONFIG) -o "." -r $(DOTNET_RID) createdata.csproj
-    dotnet add OSRTransform.csproj reference ..\osr\osr_csharp.csproj
-    dotnet build -c $(DOTNET_CONFIG) -o "." -r $(DOTNET_RID) OSRTransform.csproj
-    dotnet add GDALRead.csproj reference ..\gdal\gdal_csharp.csproj
-    dotnet add GDALRead.csproj package System.Drawing.Common
-    dotnet build -c $(DOTNET_CONFIG) -o "." -r $(DOTNET_RID) GDALRead.csproj
-    dotnet add GDALReadDirect.csproj reference ..\gdal\gdal_csharp.csproj
-    dotnet add GDALReadDirect.csproj package System.Drawing.Common
-    dotnet build -c $(DOTNET_CONFIG) -o "." -r $(DOTNET_RID) GDALReadDirect.csproj
-    dotnet add GDALAdjustContrast.csproj reference ..\gdal\gdal_csharp.csproj
-    dotnet add GDALAdjustContrast.csproj package System.Drawing.Common
-    dotnet build -c $(DOTNET_CONFIG) -o "." -r $(DOTNET_RID) GDALAdjustContrast.csproj
-    dotnet add GDALDatasetRasterIO.csproj reference ..\gdal\gdal_csharp.csproj
-    dotnet add GDALDatasetRasterIO.csproj package System.Drawing.Common
-    dotnet build -c $(DOTNET_CONFIG) -o "." -r $(DOTNET_RID) GDALDatasetRasterIO.csproj
-    dotnet add GDALDatasetRasterIOEx.csproj reference ..\gdal\gdal_csharp.csproj
-    dotnet add GDALDatasetRasterIOEx.csproj package System.Drawing.Common
-    dotnet build -c $(DOTNET_CONFIG) -o "." -r $(DOTNET_RID) GDALDatasetRasterIOEx.csproj  
-    dotnet add GDALWrite.csproj reference ..\gdal\gdal_csharp.csproj
-    dotnet build -c $(DOTNET_CONFIG) -o "." -r $(DOTNET_RID) GDALWrite.csproj
-    dotnet add GDALDatasetWrite.csproj reference ..\gdal\gdal_csharp.csproj
-    dotnet build -c $(DOTNET_CONFIG) -o "." -r $(DOTNET_RID) GDALDatasetWrite.csproj
-    dotnet add GDALColorTable.csproj reference ..\gdal\gdal_csharp.csproj
-    dotnet build -c $(DOTNET_CONFIG) -o "." -r $(DOTNET_RID) GDALColorTable.csproj
-    dotnet add WKT2WKB.csproj reference ..\ogr\ogr_csharp.csproj
-    dotnet build -c $(DOTNET_CONFIG) -o "." -r $(DOTNET_RID) WKT2WKB.csproj
-    dotnet add OGRGEOS.csproj reference ..\ogr\ogr_csharp.csproj
-    dotnet build -c $(DOTNET_CONFIG) -o "." -r $(DOTNET_RID) OGRGEOS.csproj
-    dotnet add ReadXML.csproj reference ..\gdal\gdal_csharp.csproj
-    dotnet build -c $(DOTNET_CONFIG) -o "." -r $(DOTNET_RID) ReadXML.csproj
-    dotnet add GDALInfo.csproj reference ..\ogr\ogr_csharp.csproj
-    dotnet add GDALInfo.csproj reference ..\gdal\gdal_csharp.csproj
-    dotnet build -c $(DOTNET_CONFIG) -o "." -r $(DOTNET_RID) GDALInfo.csproj
-    dotnet add GDALOverviews.csproj reference ..\gdal\gdal_csharp.csproj
-    dotnet build -c $(DOTNET_CONFIG) -o "." -r $(DOTNET_RID) GDALOverviews.csproj
-    dotnet add GDALCreateCopy.csproj reference ..\gdal\gdal_csharp.csproj
-    dotnet build -c $(DOTNET_CONFIG) -o "." -r $(DOTNET_RID) GDALCreateCopy.csproj
-    dotnet add GDALGetHistogram.csproj reference ..\gdal\gdal_csharp.csproj
-    dotnet build -c $(DOTNET_CONFIG) -o "." -r $(DOTNET_RID) GDALGetHistogram.csproj
-    dotnet add VSIMem.csproj reference ..\gdal\gdal_csharp.csproj
-    dotnet build -c $(DOTNET_CONFIG) -o "." -r $(DOTNET_RID) VSIMem.csproj
-    dotnet add GDALMemDataset.csproj reference ..\gdal\gdal_csharp.csproj
-    dotnet add GDALMemDataset.csproj package System.Drawing.Common
-    dotnet build -c $(DOTNET_CONFIG) -o "." -r $(DOTNET_RID) GDALMemDataset.csproj
-    dotnet add OGRLayerAlg.csproj reference ..\osr\osr_csharp.csproj
-    dotnet add OGRLayerAlg.csproj reference ..\ogr\ogr_csharp.csproj
-    dotnet build -c $(DOTNET_CONFIG) -o "." -r $(DOTNET_RID) OGRLayerAlg.csproj
-    dotnet add OGRFeatureEdit.csproj reference ..\osr\osr_csharp.csproj
-    dotnet add OGRFeatureEdit.csproj reference ..\ogr\ogr_csharp.csproj
-    dotnet build -c $(DOTNET_CONFIG) -o "." -r $(DOTNET_RID) OGRFeatureEdit.csproj
-    dotnet add GDALWarp.csproj reference ..\gdal\gdal_csharp.csproj
-    dotnet build -c $(DOTNET_CONFIG) -o "." -r $(DOTNET_RID) GDALWarp.csproj
-    dotnet add GetCRSInfo.csproj reference ..\osr\osr_csharp.csproj
-    dotnet build -c $(DOTNET_CONFIG) -o "." -r $(DOTNET_RID) GetCRSInfo.csproj
-    dotnet add GetCRSInfo.csproj reference ..\osr\osr_csharp.csproj
-    dotnet build -c $(DOTNET_CONFIG) -o "." -r $(DOTNET_RID) GetCRSInfo.csproj
-    dotnet add gdal_test.csproj reference ..\gdal\gdal_csharp.csproj
-    dotnet build -c $(DOTNET_CONFIG) -o "." -r $(DOTNET_RID) gdal_test.csproj
-    -move /Y *.dll ..
-    -move /Y *.exe ..
-    -move /Y *.pdb ..
-    -move /Y *.json ..
-    -move /Y *.md ..
-    cd ..    
-!ELSE
-    $(CSC) $(CSDEBUG) /r:ogr_csharp.dll /r:osr_csharp.dll /out:ogrinfo.exe apps\ogrinfo.cs
-    $(CSC) $(CSDEBUG) /r:ogr_csharp.dll /r:osr_csharp.dll /out:createdata.exe apps\createdata.cs
-    $(CSC) $(CSDEBUG) /r:osr_csharp.dll /out:OSRTransform.exe apps\OSRTransform.cs
-    $(CSC) $(CSDEBUG) /r:gdal_csharp.dll /r:System.Drawing.dll /out:GDALRead.exe apps\GDALRead.cs
-    $(CSC) $(CSDEBUG) /r:gdal_csharp.dll /r:System.Drawing.dll /out:GDALReadDirect.exe apps\GDALReadDirect.cs
-    $(CSC) $(CSDEBUG) /r:gdal_csharp.dll /r:System.Drawing.dll /out:GDALAdjustContrast.exe apps\GDALAdjustContrast.cs
-    $(CSC) $(CSDEBUG) /r:gdal_csharp.dll /r:System.Drawing.dll /out:GDALDatasetRasterIO.exe apps\GDALDatasetRasterIO.cs
-    $(CSC) $(CSDEBUG) /r:gdal_csharp.dll /r:System.Drawing.dll /out:GDALDatasetRasterIOEx.exe apps\GDALDatasetRasterIOEx.cs
-    $(CSC) $(CSDEBUG) /r:gdal_csharp.dll /out:GDALWrite.exe apps\GDALWrite.cs
-    $(CSC) $(CSDEBUG) /r:gdal_csharp.dll /out:GDALDatasetWrite.exe apps\GDALDatasetWrite.cs
-    $(CSC) $(CSDEBUG) /r:gdal_csharp.dll /out:GDALColorTable.exe apps\GDALColorTable.cs
-    $(CSC) $(CSDEBUG) /r:ogr_csharp.dll /out:WKT2WKB.exe apps\WKT2WKB.cs
-    $(CSC) $(CSDEBUG) /r:ogr_csharp.dll /out:OGRGEOS.exe apps\OGRGEOS.cs
-    $(CSC) $(CSDEBUG) /r:gdal_csharp.dll /out:ReadXML.exe apps\ReadXML.cs
-    $(CSC) $(CSDEBUG) /r:gdal_csharp.dll /r:osr_csharp.dll /out:GDALInfo.exe apps\GDALInfo.cs
-    $(CSC) $(CSDEBUG) /r:gdal_csharp.dll /out:GDALOverviews.exe apps\GDALOverviews.cs
-    $(CSC) $(CSDEBUG) /r:gdal_csharp.dll /out:GDALCreateCopy.exe apps\GDALCreateCopy.cs
-    $(CSC) $(CSDEBUG) /r:gdal_csharp.dll /out:GDALGetHistogram.exe apps\GDALGetHistogram.cs
-    $(CSC) $(CSDEBUG) /r:gdal_csharp.dll /out:VSIMem.exe apps\VSIMem.cs
-    $(CSC) $(CSDEBUG) /r:gdal_csharp.dll /r:System.Drawing.dll /out:GDALMemDataset.exe apps\GDALMemDataset.cs
-	$(CSC) $(CSDEBUG) /r:ogr_csharp.dll /r:osr_csharp.dll /out:OGRLayerAlg.exe apps\OGRLayerAlg.cs
-	$(CSC) $(CSDEBUG) /r:ogr_csharp.dll /r:osr_csharp.dll /out:OGRFeatureEdit.exe apps\OGRFeatureEdit.cs
-	$(CSC) $(CSDEBUG) /r:gdal_csharp.dll /out:GDALWarp.exe apps\GDALWarp.cs
-	$(CSC) $(CSDEBUG) /r:osr_csharp.dll /out:GetCRSInfo.exe apps\GetCRSInfo.cs
-    $(CSC) $(CSDEBUG) /r:gdal_csharp.dll  /out:gdal_test.exe apps\gdal_test.cs
-!ENDIF
+samples: apps/ogrinfo.exe apps/createdata.exe apps/OSRTransform.exe apps/GDALRead.exe apps/GDALReadDirect.exe apps/GDALAdjustContrast.exe apps/GDALDatasetRasterIO.exe apps/GDALDatasetRasterIOEx.exe apps/GDALWrite.exe apps/GDALDatasetWrite.exe apps/GDALColorTable.exe apps/WKT2WKB.exe apps/OGRGEOS.exe apps/ReadXML.exe apps/GDALInfo.exe apps/GDALOverviews.exe apps/GDALCreateCopy.exe apps/GDALGetHistogram.exe apps/VSIMem.exe apps/GDALMemDataset.exe apps/OGRLayerAlg.exe apps/OGRFeatureEdit.exe apps/GDALWarp.exe apps/GetCRSInfo.exe apps/gdal_test.exe
+    copy apps\bin\x64\Release\net5\win-x64\*.* .\apps
 
 test:
 !IFDEF MONO
-	mono createdata.exe Data pointlayer
-    mono ogrinfo.exe Data/pointlayer.shp
-    mono OSRTransform.exe
-    mono GDALWrite.exe Data/sample.tif
-    mono GDALDatasetWrite.exe Data/sample1.tif
-	mono GDALCreateCopy.exe Data/sample.tif Data/sample2.tif
-	mono GDALOverviews.exe Data/sample.tif NEAREST 2 4
-	mono GDALInfo.exe Data/sample.tif
-	mono GDALInfo.exe ../../../autotest/gcore/data/byte.tif
+	mono apps\createdata.exe Data pointlayer
+    mono appp\ogrinfo.exe Data/pointlayer.shp
+    mono apps\OSRTransform.exe
+    mono apps\GDALWrite.exe Data/sample.tif
+    mono apps\GDALDatasetWrite.exe Data/sample1.tif
+	mono apps\GDALCreateCopy.exe Data/sample.tif Data/sample2.tif
+	mono apps\GDALOverviews.exe Data/sample.tif NEAREST 2 4
+	mono apps\GDALInfo.exe Data/sample.tif
+	mono apps\GDALInfo.exe ../../../autotest/gcore/data/byte.tif
 !ELSE
-    createdata.exe Data pointlayer
-    ogrinfo.exe Data/pointlayer.shp
-	OSRTransform.exe
-	GDALWrite.exe Data/sample.tif
-	GDALDatasetWrite.exe Data/sample1.tif
-	GDALCreateCopy.exe Data/sample.tif Data/sample2.tif
-    GDALReadDirect.exe Data/sample.tif Data/sample.png
-	GDALOverviews.exe Data/sample.tif NEAREST 2 4
-	GDALInfo.exe Data/sample.tif
-	ogrlayeralg.exe Intersection Data/pointlayer.shp pointlayer Data/pointlayer.shp pointlayer Data intersectionresult
-	ogrinfo.exe Data/intersectionresult.shp
-	getcrsinfo.exe "EPSG" 20
+    apps\createdata.exe Data pointlayer
+    apps\ogrinfo.exe Data/pointlayer.shp
+	apps\OSRTransform.exe
+	apps\GDALWrite.exe Data/sample.tif
+	apps\GDALDatasetWrite.exe Data/sample1.tif
+	apps\GDALCreateCopy.exe Data/sample.tif Data/sample2.tif
+    apps\GDALReadDirect.exe Data/sample.tif Data/sample.png
+	apps\GDALOverviews.exe Data/sample.tif NEAREST 2 4
+	apps\GDALInfo.exe Data/sample.tif
+	apps\ogrlayeralg.exe Intersection Data/pointlayer.shp pointlayer Data/pointlayer.shp pointlayer Data intersectionresult
+	apps\ogrinfo.exe Data/intersectionresult.shp
+	apps\getcrsinfo.exe "EPSG" 20
 !ENDIF
 
 clean:
