@@ -24,7 +24,10 @@ if errorlevel 1 exit 1
 copy /B apps\*.exe %LIBRARY_BIN%\gcs
 if errorlevel 1 exit 1
 
-copy /B apps\*.dll %LIBRARY_BIN%
+copy /B apps\*.dll %LIBRARY_BIN%\gcs
+if errorlevel 1 exit 1
+
+copy /B apps\*csharp.dll %LIBRARY_BIN%
 if errorlevel 1 exit 1
 
 copy /B apps\*.json %LIBRARY_BIN%\gcs
