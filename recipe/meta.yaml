@@ -1,4 +1,4 @@
-{% set version = "1.0.1" %}
+{% set version = "1.0.2" %}
 {% set gdalversion = "3.3.2" %}
 
 package:
@@ -10,7 +10,7 @@ source:
   sha256: 630e34141cf398c3078d7d8f08bb44e804c65bbf09807b3610dcbfbc37115cc3
 
 build:
-  number: 1
+  number: 0
 
 requirements:
   build:
