@@ -16,7 +16,7 @@ requirements:
   build:
     - mono  # [not win]
     - cmake  # [win]
-    - make # [not win]
+    - make  # [not win]
     - pkg-config >=0.21  # [not win]
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
