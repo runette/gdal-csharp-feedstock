@@ -14,10 +14,14 @@ cxx_compiler_version:
 - '11'
 gdal:
 - '3.4'
+libgdal:
+- '3.4'
 macos_machine:
 - x86_64-apple-darwin13.4.0
 pin_run_as_build:
   gdal:
+    max_pin: x.x
+  libgdal:
     max_pin: x.x
 target_platform:
 - osx-64
