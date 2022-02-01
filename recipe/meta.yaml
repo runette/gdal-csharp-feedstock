@@ -1,5 +1,5 @@
-{% set version = "1.1.0" %}
-{% set gdalversion = "3.4.0" %}
+{% set version = "1.1.1" %}
+{% set gdalversion = "3.4.1" %}
 
 package:
   name: gdal-csharp
@@ -7,7 +7,7 @@ package:
 
 source:
   url: http://download.osgeo.org/gdal/{{ gdalversion }}/gdal-{{ gdalversion }}.tar.xz
-  sha256: ac7bd2bb9436f3fc38bc7309704672980f82d64b4d57627d27849259b8f71d5c
+  sha256: e360387bc25ec24940f46afbeada48002d72c74aaf9eccf2a40e8d74e711a2e4
 
 build:
   number: 0
@@ -22,9 +22,9 @@ requirements:
     - {{ compiler('cxx') }}
     - swig
   host:
-    - libgdal ={{ gdalversion }}
+    - libgdal
   run:
-    - libgdal ={{ gdalversion }}
+    - libgdal
     - mono  # [not win]
 
 test:
