@@ -1,40 +1,8 @@
-call "%RECIPE_DIR%\set_bld_opts.bat"
+cmake -DCMAKE_C_FLAGS=" /WX" -DCMAKE_CXX_FLAGS=" /WX" -S . -B ../build
 if errorlevel 1 exit 1
 
-cd swig\csharp
+cmake --build ../build --config Release -j 3
 if errorlevel 1 exit 1
 
-copy /B "%RECIPE_DIR%\gdal_test.cs" apps
-if errorlevel 1 exit 1
-
-nmake /f "%RECIPE_DIR%\makefile.vc" interface
-if errorlevel 1 exit 1
-
-nmake /f "%RECIPE_DIR%\makefile.vc" %BLD_OPTS%
-if errorlevel 1 exit 1
-
-nmake /f "%RECIPE_DIR%\makefile.vc" test
-if errorlevel 1 exit 1
-
-mkdir  %LIBRARY_BIN%\gcs
-
-copy /B *.dll %LIBRARY_BIN%
-if errorlevel 1 exit 1
-
-copy /B apps\*.exe %LIBRARY_BIN%\gcs
-if errorlevel 1 exit 1
-
-copy /B apps\*.dll %LIBRARY_BIN%\gcs
-if errorlevel 1 exit 1
-
-copy /B apps\*csharp.dll %LIBRARY_BIN%
-if errorlevel 1 exit 1
-
-copy /B apps\*.json %LIBRARY_BIN%\gcs
-if errorlevel 1 exit 1
-
-copy /B apps\*.pdb %LIBRARY_BIN%\gcs
-if errorlevel 1 exit 1
-
-copy /B apps\gdal_test.* %LIBRARY_BIN%
+ctest --test-dir ../build -j 3 
 if errorlevel 1 exit 1
