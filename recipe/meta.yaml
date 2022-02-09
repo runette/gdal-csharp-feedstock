@@ -1,22 +1,19 @@
-{% set version = "1.1.1" %}
-{% set gdalversion = "3.4.1" %}
+{% set version = "1.2.0" %}
+{% set gdalversion = "3.5..0" %}
 
 package:
   name: gdal-csharp
   version: {{ version }}
 
 source:
-  url: http://download.osgeo.org/gdal/{{ gdalversion }}/gdal-{{ gdalversion }}.tar.xz
-  sha256: 332f053516ca45101ef0f7fa96309b64242688a8024780a5d93be0230e42173d
+  git_url: https://github.com/OSGeo/gdal.git
 
 build:
   number: 0
 
 requirements:
   build:
-    - mono  # [not win]
-    - cmake  # [win]
-    - make  # [not win]
+    - cmake
     - pkg-config >=0.21  # [not win]
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
@@ -25,12 +22,10 @@ requirements:
     - libgdal
   run:
     - libgdal
-    - mono  # [not win]
 
 test:
   commands:
-    - mono $CONDA_PREFIX/lib/gdal_test.exe  # [not win]
-    - gdal_test  # [win]
+    - gdal_test
 
 about:
   home: http://www.gdal.org
