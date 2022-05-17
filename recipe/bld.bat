@@ -1,4 +1,4 @@
-cmake -DCMAKE_C_FLAGS=" /WX" -DCMAKE_CXX_FLAGS=" /WX" -S . -B ../build
+cmake -S . -B ../build
 if errorlevel 1 exit 1
 
 cmake --build ../build --config Release -j 3
