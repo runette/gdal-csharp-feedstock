@@ -23,5 +23,4 @@ if [[ $target_platform =~ linux.* ]]; then
 fi
 
 cmake -DGDAL_CSHARP_ONLY=ON -S . -B ../build
-cmake --build ../build --config Release -j 3
-ctest --test-dir ../build -j 3 
+cmake --build ../build --config Release -j 3 --target csharp_samples
