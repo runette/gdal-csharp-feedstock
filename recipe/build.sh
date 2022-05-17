@@ -22,6 +22,6 @@ if [[ $target_platform =~ linux.* ]]; then
   cp ${RECIPE_DIR}/userfaultfd.h ${PREFIX}/include/linux/userfaultfd.h
 fi
 
-cmake -S . -B ../build
+cmake -DGDAL_CSHARP_ONLY=ON -S . -B ../build
 cmake --build ../build --config Release -j 3
 ctest --test-dir ../build -j 3 
