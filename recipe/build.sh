@@ -11,7 +11,7 @@ export CPPFLAGS="${CPPFLAGS} -I${PREFIX}/include"
 export DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1
 curl -sSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin
 
-export PATH=$PATH;~/.dotnet
+export PATH=$PATH:~/.dotnet
 dotnet --version
 dotnet nuget list source
 
