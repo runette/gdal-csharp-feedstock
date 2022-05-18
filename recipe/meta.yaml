@@ -20,6 +20,7 @@ requirements:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
     - swig
+    - dotnet >=5.0.0 <6.0.0a0
   host:
     - libgdal
   run:
