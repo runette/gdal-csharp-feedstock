@@ -8,6 +8,8 @@ unset PYTHON
 
 export CPPFLAGS="${CPPFLAGS} -I${PREFIX}/include"
 
+dotnet nuget enable source nuget.org
+
 dotnet nuget locals global-packages --list
 
 
