@@ -22,5 +22,5 @@ if [[ $target_platform =~ linux.* ]]; then
   cp ${RECIPE_DIR}/userfaultfd.h ${PREFIX}/include/linux/userfaultfd.h
 fi
 
-cmake -DGDAL_CSHARP_ONLY=ON -S . -B ../build
+cmake -DGDAL_CSHARP_ONLY=ON "-DCMAKE_PREFIX_PATH=${CONDA_PREFIX}" -S . -B ../build
 cmake --build ../build --config Release -j 3 --target csharp_samples
