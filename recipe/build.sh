@@ -8,11 +8,13 @@ unset PYTHON
 
 export CPPFLAGS="${CPPFLAGS} -I${PREFIX}/include"
 
+export DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1
+curl -sSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin
+~/.dotnet/dotnet --version
+ ~/.dotnet/dotnet nuget list source
+
 ls ~ -al
 
-dotnet --version
-
-dotnet nuget locals global-packages --list
 
 
 # Filter out -std=.* from CXXFLAGS as it disrupts checks for C++ language levels.
