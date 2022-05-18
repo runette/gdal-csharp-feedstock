@@ -13,15 +13,6 @@ curl -sSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin
 
 export PATH=$PATH:~/.dotnet
 
-echo next
-
-dotnet --version
-dotnet nuget list source
-
-ls ~ -al
-
-
-
 # Filter out -std=.* from CXXFLAGS as it disrupts checks for C++ language levels.
 re='(.*[[:space:]])\-std\=[^[:space:]]*(.*)'
 if [[ "${CXXFLAGS}" =~ $re ]]; then
