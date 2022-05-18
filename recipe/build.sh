@@ -28,3 +28,14 @@ fi
 
 cmake -DGDAL_CSHARP_ONLY=ON "-DCMAKE_PREFIX_PATH=${CONDA_PREFIX}" -S . -B ../build
 cmake --build ../build --config Release -j 3 --target csharp_samples
+ctest -R “^csharp.*”
+
+
+#install libraries
+cp *.dll $PREFIX/lib || :
+cp *.csproj $PREFIX/lib || :
+cp .libs/*.dylib $PREFIX/lib || :
+cp .libs/*.so $PREFIX/lib || :
+cp dotnet $PREFIX/lib || :
+cp *.json $PREFIX/lib || :
+cp *.exe $PREFIX/lib || :
