@@ -28,7 +28,7 @@ requirements:
 
 test:
   commands:
-    - GDALTest
+
 
 about:
   home: http://www.gdal.org

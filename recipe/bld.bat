@@ -4,10 +4,9 @@ if errorlevel 1 exit 1
 cmake --build ../build --config Release -j 3 --target csharp_samples
 if errorlevel 1 exit 1
 
-ctest -R "^csharp.*" -VV
-if errorlevel 1 exit 1
+cd ..\build\swig\csharp
 
-cd ..\build\csharp\swig
+dir
 
 copy /B Release\*.dll %LIBRARY_BIN%
 if errorlevel 1 exit 1
