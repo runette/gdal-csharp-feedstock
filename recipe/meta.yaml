@@ -28,6 +28,7 @@ requirements:
 
 test:
   commands:
+   - GDALTest [win]
 
 
 about:
