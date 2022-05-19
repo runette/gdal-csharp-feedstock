@@ -1,4 +1,4 @@
-{% set version = "1.2.0" %}
+{% set version = "1.2.0a1" %}
 {% set gdalversion = "3.5.0" %}
 
 package:
@@ -28,7 +28,7 @@ requirements:
 
 test:
   commands:
-   - GDALTest [win]
+   - GDALTest
 
 
 about:

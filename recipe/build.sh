@@ -34,8 +34,8 @@ cd ../build/swig/csharp/GDALTest
 
 
 #install libraries
-cp *csharp.dll $PREFIX/lib || :
+cp *.dll $PREFIX/bin || :
 cp *wrap.dylib $PREFIX/lib || :
 cp *wrap.so $PREFIX/lib || :
-cp GDALTest.* $PREFIX/lib || :
+cp GDALTest.* $PREFIX/bin || :
 cp GDALTest $PREFIX/bin || :
