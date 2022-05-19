@@ -28,7 +28,7 @@ fi
 
 cmake -DGDAL_CSHARP_ONLY=ON "-DCMAKE_PREFIX_PATH=${CONDA_PREFIX}" -S . -B ../build
 cmake --build ../build --config Release -j 3 --target csharp_samples
-ctest -R “^csharp.*”
+ctest -R "^csharp.*"
 
 
 #install libraries

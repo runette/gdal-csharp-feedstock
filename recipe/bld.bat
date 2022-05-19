@@ -4,7 +4,7 @@ if errorlevel 1 exit 1
 cmake --build ../build --config Release -j 3 --target csharp_samples
 if errorlevel 1 exit 1
 
-ctest -R “^csharp.*” 
+ctest -R "^csharp.*"
 if errorlevel 1 exit 1
 
 
