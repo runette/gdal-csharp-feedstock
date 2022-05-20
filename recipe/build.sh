@@ -30,12 +30,9 @@ cmake -DGDAL_CSHARP_ONLY=ON "-DCMAKE_PREFIX_PATH=${CONDA_PREFIX}" -S . -B ../bui
 cmake --build ../build --config Release -j 3 --target csharp_samples
 ctest -R "^csharp.*" -VV
 
-cd ../build/swig/csharp/GDALTest
-
+cd ../build/swig/csharp
 
 #install libraries
-cp *.dll $PREFIX/bin || :
+cp GDALTest/*.* $PREFIX/bin || :
 cp *wrap.dylib $PREFIX/lib || :
 cp *wrap.so $PREFIX/lib || :
-cp GDALTest.* $PREFIX/bin || :
-cp GDALTest $PREFIX/bin || :

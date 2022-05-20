@@ -28,7 +28,8 @@ requirements:
 
 test:
   commands:
-   - GDALTest
+   - GDALTest  # [win]
+   - dotnet $CONDA_PREFIX/bin/GDALTest.dll  # [not win]
 
 
 about:
