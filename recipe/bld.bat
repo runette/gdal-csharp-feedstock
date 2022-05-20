@@ -1,40 +1,13 @@
-call "%RECIPE_DIR%\set_bld_opts.bat"
+cmake -DGDAL_CSHARP_ONLY=ON -S . -B ../build
 if errorlevel 1 exit 1
 
-cd swig\csharp
+cmake --build ../build --config Release -j 3 --target csharp_samples
 if errorlevel 1 exit 1
 
-copy /B "%RECIPE_DIR%\gdal_test.cs" apps
+cd ..\build\swig\csharp
+
+copy /B Release\*.dll %LIBRARY_BIN%
 if errorlevel 1 exit 1
 
-nmake /f "%RECIPE_DIR%\makefile.vc" interface
-if errorlevel 1 exit 1
-
-nmake /f "%RECIPE_DIR%\makefile.vc" %BLD_OPTS%
-if errorlevel 1 exit 1
-
-nmake /f "%RECIPE_DIR%\makefile.vc" test
-if errorlevel 1 exit 1
-
-mkdir  %LIBRARY_BIN%\gcs
-
-copy /B *.dll %LIBRARY_BIN%
-if errorlevel 1 exit 1
-
-copy /B apps\*.exe %LIBRARY_BIN%\gcs
-if errorlevel 1 exit 1
-
-copy /B apps\*.dll %LIBRARY_BIN%\gcs
-if errorlevel 1 exit 1
-
-copy /B apps\*csharp.dll %LIBRARY_BIN%
-if errorlevel 1 exit 1
-
-copy /B apps\*.json %LIBRARY_BIN%\gcs
-if errorlevel 1 exit 1
-
-copy /B apps\*.pdb %LIBRARY_BIN%\gcs
-if errorlevel 1 exit 1
-
-copy /B apps\gdal_test.* %LIBRARY_BIN%
+copy /B GDALTest\*.* %LIBRARY_BIN%
 if errorlevel 1 exit 1

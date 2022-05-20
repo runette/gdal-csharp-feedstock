@@ -8,6 +8,11 @@ unset PYTHON
 
 export CPPFLAGS="${CPPFLAGS} -I${PREFIX}/include"
 
+export DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1
+curl -sSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin 
+
+export PATH=$PATH:~/.dotnet
+
 # Filter out -std=.* from CXXFLAGS as it disrupts checks for C++ language levels.
 re='(.*[[:space:]])\-std\=[^[:space:]]*(.*)'
 if [[ "${CXXFLAGS}" =~ $re ]]; then
@@ -21,75 +26,13 @@ if [[ $target_platform =~ linux.* ]]; then
   cp ${RECIPE_DIR}/userfaultfd.h ${PREFIX}/include/linux/userfaultfd.h
 fi
 
-bash configure --prefix=${PREFIX} \
-               --host=${HOST} \
-               --with-curl \
-               --with-dods-root=${PREFIX} \
-               --with-expat=${PREFIX} \
-               --with-freexl=${PREFIX} \
-               --with-geos=${PREFIX}/bin/geos-config \
-               --with-geotiff=${PREFIX} \
-               --with-hdf4=${PREFIX} \
-               --with-cfitsio=${PREFIX} \
-               --with-hdf5=${PREFIX} \
-               --with-tiledb=${PREFIX} \
-               --with-jpeg=${PREFIX} \
-               --with-kea=${PREFIX}/bin/kea-config \
-               --with-kea=${PREFIX}/bin/kea-config \
-               --with-libiconv-prefix=${PREFIX} \
-               --with-libjson-c=${PREFIX} \
-               --with-libkml=${PREFIX} \
-               --with-liblzma=yes \
-               --with-libtiff=${PREFIX} \
-               --with-libz=${PREFIX} \
-               --with-netcdf=${PREFIX} \
-               --with-openjpeg=${PREFIX} \
-               --with-pcre \
-               --with-pg=yes \
-               --with-png=${PREFIX} \
-               --with-poppler=${PREFIX} \
-               --with-spatialite=${PREFIX} \
-               --with-sqlite3=${PREFIX} \
-               --with-proj=${PREFIX} \
-               --with-webp=${PREFIX} \
-               --with-xerces=${PREFIX} \
-               --with-xml2=yes \
-               --with-zstd=${PREFIX} \
-               --without-python \
-               --disable-static \
-               --verbose \
-               ${OPTS}
+cmake -DGDAL_CSHARP_ONLY=ON "-DCMAKE_PREFIX_PATH=${CONDA_PREFIX}" -S . -B ../build
+cmake --build ../build --config Release -j 3 --target csharp_samples
+ctest -R "^csharp.*" -VV
 
-cd swig/csharp
-
-if [[ $target_platform =~ linux.* ]]; then
-  export LIBGDAL_=${PREFIX}/lib/$(ls ${PREFIX}/lib | egrep 'libgdal.so\...\..++')
-else
-  export LIBGDAL_=${PREFIX}/lib/$(ls ${PREFIX}/lib | egrep 'libgdal\...\..*')
-fi
-echo $LIBGDAL_ test
-
-
-cp -f ${RECIPE_DIR}/SWIGmake.base ..
-cp -f ${RECIPE_DIR}/GNUmakefile .
-cp -f ${RECIPE_DIR}/gdal_test.cs apps
-
-make generate
-
-make
-
-make test
-
-if [[ $target_platform =~ linux.* ]]; then
-  rm ${PREFIX}/include/linux/userfaultfd.h
-fi
+cd ../build/swig/csharp
 
 #install libraries
-cp *.dll $PREFIX/lib || :
-cp *.csproj $PREFIX/lib || :
-cp .libs/*.dylib $PREFIX/lib || :
-cp .libs/*.so $PREFIX/lib || :
-cp dotnet $PREFIX/lib || :
-cp *.json $PREFIX/lib || :
-cp *.exe $PREFIX/lib || :
-
+cp GDALTest/*.* $PREFIX/bin || :
+cp *wrap.dylib $PREFIX/lib || :
+cp *wrap.so $PREFIX/lib || :

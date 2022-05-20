@@ -1,23 +1,22 @@
-{% set version = "1.1.1" %}
-{% set gdalversion = "3.4.1" %}
+{% set version = "2.0.0a1" %}
+{% set gdalversion = "3.5.0" %}
 
 package:
   name: gdal-csharp
   version: {{ version }}
 
 source:
-  url: http://download.osgeo.org/gdal/{{ gdalversion }}/gdal-{{ gdalversion }}.tar.xz
-  sha256: 332f053516ca45101ef0f7fa96309b64242688a8024780a5d93be0230e42173d
+ url: http://download.osgeo.org/gdal/{{ gdalversion }}/gdal-{{ gdalversion }}.tar.xz
+ sha256: d49121e5348a51659807be4fb866aa840f8dbec4d1acba6d17fdefa72125bfc9
 
 build:
   number: 0
-
+ 
 requirements:
   build:
-    - mono  # [not win]
-    - cmake  # [win]
-    - make  # [not win]
+    - cmake
     - pkg-config >=0.21  # [not win]
+    - make  # [not win]
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
     - swig
@@ -25,12 +24,13 @@ requirements:
     - libgdal
   run:
     - libgdal
-    - mono  # [not win]
+    - dotnet
 
 test:
   commands:
-    - mono $CONDA_PREFIX/lib/gdal_test.exe  # [not win]
-    - gdal_test  # [win]
+   - GDALTest  # [win]
+   #- dotnet $CONDA_PREFIX/bin/GDALTest.dll  # [not win]
+
 
 about:
   home: http://www.gdal.org
