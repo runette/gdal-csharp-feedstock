@@ -29,7 +29,7 @@ fi
 cmake -DGDAL_CSHARP_ONLY=ON -DCSHARP_LIBRARY_VERSION=Net6.0 -DCSHARP_APPLICATION_VERSION=Net6.0 "-DCMAKE_PREFIX_PATH=${CONDA_PREFIX}" -S . -B ../build
 cmake --build ../build --config Release -j 3 --target csharp_samples
 
-cp swig/csharp/app/GDALTest.cs $PREFIX/share/gdal
+cp swig/csharp/apps/GDALTest.cs $PREFIX/share/gdal
 
 cd ../build/swig/csharp
 ctest -R "^csharp.*" -VV

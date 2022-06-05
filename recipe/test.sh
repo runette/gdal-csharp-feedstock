@@ -1,4 +1,6 @@
-cd $CONDA_PREFIX/share/gdal
+export DYLD_LIBRARY_PATH=$CONDA_PREFIX/lib
+export LD_LIBRARY_PATH=$CONDA_PREFIX/lib
 dotnet new console
-dotnet add reference osgeo.GDAL -s $CONDA_PREFIX/share/gdal
+rm Program.cs
+dotnet add package osgeo.GDAL -s $CONDA_PREFIX/share/gdal
 dotnet run
