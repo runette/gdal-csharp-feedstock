@@ -38,7 +38,7 @@ cp *wrap.dylib $PREFIX/lib || :
 cp *wrap.so $PREFIX/lib || :
 cp osgeo*.nupkg $PREFIX/share/gdal
 
-export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:$PREFIX/lib
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PREFIX/lib
+export DYLD_LIBRARY_PATH=$PREFIX/lib:$DYLD_LIBRARY_PATH
+export LD_LIBRARY_PATH=$PREFIX/lib:$LD_LIBRARY_PATH
 
 ctest -R "^csharp.*" -VV

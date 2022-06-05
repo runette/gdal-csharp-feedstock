@@ -6,12 +6,10 @@ if errorlevel 1 exit 1
 
 cd ..\build\swig\csharp
 
-ctest -R "^csharp.*" -VV
+ctest -R "^csharp.*" -VV -C Release
 
 copy /B Release\*.dll %LIBRARY_BIN%
 if errorlevel 1 exit 1
 
-copy /B GDALTest\*.* %LIBRARY_BIN%
+xcopy /B /i osgeo*.nupkg %LIBRARY_PREFIX%\share\gdal
 if errorlevel 1 exit 1
-
-copy /B osgeo*.nupkg %LIBRARY_PREFIX\share\gdal
