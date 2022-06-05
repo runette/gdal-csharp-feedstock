@@ -14,4 +14,4 @@ if errorlevel 1 exit 1
 copy /B GDALTest\*.* %LIBRARY_BIN%
 if errorlevel 1 exit 1
 
-copy /B osgeo*.nupkg $PREFIX/share/gdal
+copy /B osgeo*.nupkg %LIBRARY_PREFIX\share\gdal

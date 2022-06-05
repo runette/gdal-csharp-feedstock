@@ -32,9 +32,13 @@ cmake --build ../build --config Release -j 3 --target csharp_samples
 cp swig/csharp/apps/GDALTest.cs $PREFIX/share/gdal
 
 cd ../build/swig/csharp
-ctest -R "^csharp.*" -VV
 
 #install libraries
 cp *wrap.dylib $PREFIX/lib || :
 cp *wrap.so $PREFIX/lib || :
 cp osgeo*.nupkg $PREFIX/share/gdal
+
+export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:$PREFIX/lib
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PREFIX/lib
+
+ctest -R "^csharp.*" -VV
