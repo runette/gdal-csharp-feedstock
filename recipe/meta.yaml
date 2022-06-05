@@ -31,9 +31,6 @@ test:
    - test.sh
   source_files:
    - swig/csharp/apps/GDALTest.cs
-  commands:
-   - GDALTest  # [win]
-   - source ./test.sh  # [not win]
 
 
 about:
