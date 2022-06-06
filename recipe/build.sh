@@ -40,5 +40,6 @@ cd ../build/swig/csharp
 cp *wrap.dylib $PREFIX/lib || :
 cp *wrap.so $PREFIX/lib || :
 cp osgeo*.nupkg $PREFIX/share/gdal
+cp OSGeo*.nupkg $PREFIX/share/gdal
 
 ctest -R "^csharp.*" -VV
