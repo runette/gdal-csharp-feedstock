@@ -1,4 +1,4 @@
-export DYLD_LIBRARY_PATH=$CONDA_PREFIX/lib
+
 export LD_LIBRARY_PATH=$CONDA_PREFIX/lib
 dotnet new console
 rm Program.cs
