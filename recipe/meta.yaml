@@ -10,7 +10,7 @@ source:
  sha256: d49121e5348a51659807be4fb866aa840f8dbec4d1acba6d17fdefa72125bfc9
 
 build:
-  number: 1
+  number: 2
  
 requirements:
   build:
@@ -27,9 +27,10 @@ requirements:
     - dotnet
 
 test:
-  commands:
-   - GDALTest  # [win]
-   #- dotnet $CONDA_PREFIX/bin/GDALTest.dll  # [not win]
+  files:
+   - test.sh
+  source_files:
+   - swig/csharp/apps/GDALTest.cs
 
 
 about:

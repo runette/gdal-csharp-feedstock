@@ -26,13 +26,20 @@ if [[ $target_platform =~ linux.* ]]; then
   cp ${RECIPE_DIR}/userfaultfd.h ${PREFIX}/include/linux/userfaultfd.h
 fi
 
-cmake -DGDAL_CSHARP_ONLY=ON "-DCMAKE_PREFIX_PATH=${CONDA_PREFIX}" -S . -B ../build
+# export DYLD_LIBRARY_PATH=$PREFIX/lib:$DYLD_LIBRARY_PATH
+export LD_LIBRARY_PATH=$PREFIX/lib:$LD_LIBRARY_PATH
+
+cmake -DGDAL_CSHARP_ONLY=ON -DCSHARP_LIBRARY_VERSION=Net6.0 -DCSHARP_APPLICATION_VERSION=Net6.0 "-DCMAKE_PREFIX_PATH=${CONDA_PREFIX}" -S . -B ../build
 cmake --build ../build --config Release -j 3 --target csharp_samples
-ctest -R "^csharp.*" -VV
+
+cp swig/csharp/apps/GDALTest.cs $PREFIX/share/gdal
 
 cd ../build/swig/csharp
 
 #install libraries
-cp GDALTest/*.* $PREFIX/bin || :
 cp *wrap.dylib $PREFIX/lib || :
 cp *wrap.so $PREFIX/lib || :
+cp osgeo*.nupkg $PREFIX/share/gdal
+cp OSGeo*.nupkg $PREFIX/share/gdal
+
+ctest -R "^csharp.*" -VV
