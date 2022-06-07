@@ -26,7 +26,7 @@ if [[ $target_platform =~ linux.* ]]; then
   cp ${RECIPE_DIR}/userfaultfd.h ${PREFIX}/include/linux/userfaultfd.h
 fi
 
-export DYLD_LIBRARY_PATH=$PREFIX/lib:$DYLD_LIBRARY_PATH
+# export DYLD_LIBRARY_PATH=$PREFIX/lib:$DYLD_LIBRARY_PATH
 export LD_LIBRARY_PATH=$PREFIX/lib:$LD_LIBRARY_PATH
 
 cmake -DGDAL_CSHARP_ONLY=ON -DCSHARP_LIBRARY_VERSION=Net6.0 -DCSHARP_APPLICATION_VERSION=Net6.0 "-DCMAKE_PREFIX_PATH=${CONDA_PREFIX}" -S . -B ../build
