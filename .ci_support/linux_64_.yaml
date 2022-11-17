@@ -17,12 +17,7 @@ docker_image:
 gdal:
 - '3.5'
 libgdal:
-- '3.5'
-pin_run_as_build:
-  gdal:
-    max_pin: x.x
-  libgdal:
-    max_pin: x.x
+- '3.6'
 target_platform:
 - linux-64
 zip_keys:
