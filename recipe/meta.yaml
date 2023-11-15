@@ -1,5 +1,5 @@
 {% set version = "2.1.0" %}
-{% set gdalversion = "3.7.2" %}
+{% set gdalversion = "3.8.0" %}
 
 package:
   name: gdal-csharp
