@@ -13,9 +13,9 @@ cxx_compiler:
 cxx_compiler_version:
 - '16'
 gdal:
-- '3.7'
+- '3.8'
 libgdal:
-- '3.7'
+- '3.8'
 macos_machine:
 - x86_64-apple-darwin13.4.0
 target_platform:
