@@ -19,13 +19,6 @@ if [[ "${CXXFLAGS}" =~ $re ]]; then
     export CXXFLAGS="${BASH_REMATCH[1]}${BASH_REMATCH[2]}"
 fi
 
-# See https://github.com/AnacondaRecipes/aggregate/pull/103
-if [[ $target_platform =~ linux.* ]]; then
-  export LDFLAGS="${LDFLAGS} -L${PREFIX}/lib -Wl,-rpath-link,${PREFIX}/lib"
-  mkdir -p ${PREFIX}/include/linux
-  cp ${RECIPE_DIR}/userfaultfd.h ${PREFIX}/include/linux/userfaultfd.h
-fi
-
 # export DYLD_LIBRARY_PATH=$PREFIX/lib:$DYLD_LIBRARY_PATH
 export LD_LIBRARY_PATH=$PREFIX/lib:$LD_LIBRARY_PATH
 
