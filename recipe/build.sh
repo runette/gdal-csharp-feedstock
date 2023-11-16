@@ -9,7 +9,7 @@ unset PYTHON
 export CPPFLAGS="${CPPFLAGS} -I${PREFIX}/include"
 
 export DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1
-curl -sSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin 
+curl -sSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin --channel 7.0
 
 export PATH=$PATH:~/.dotnet
 
@@ -22,7 +22,7 @@ fi
 # export DYLD_LIBRARY_PATH=$PREFIX/lib:$DYLD_LIBRARY_PATH
 export LD_LIBRARY_PATH=$PREFIX/lib:$LD_LIBRARY_PATH
 
-cmake -DGDAL_CSHARP_ONLY=ON -DCSHARP_LIBRARY_VERSION=Net6.0 -DCSHARP_APPLICATION_VERSION=Net6.0 "-DCMAKE_PREFIX_PATH=${CONDA_PREFIX}" -S . -B ../build
+cmake -DGDAL_CSHARP_ONLY=ON -DCSHARP_LIBRARY_VERSION=Net7.0 -DCSHARP_APPLICATION_VERSION=Net7.0 "-DCMAKE_PREFIX_PATH=${CONDA_PREFIX}" -S . -B ../build
 cmake --build ../build --config Release -j 3 --target csharp_samples
 
 cp swig/csharp/apps/GDALTest.cs $PREFIX/share/gdal
