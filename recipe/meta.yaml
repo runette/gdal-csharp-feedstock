@@ -1,5 +1,5 @@
-{% set version = "2.1.1" %}
-{% set gdalversion = "3.8.0" %}
+{% set version = "2.1.2" %}
+{% set gdalversion = "3.9.0" %}
 
 package:
   name: gdal-csharp
@@ -7,7 +7,7 @@ package:
 
 source:
  url: http://download.osgeo.org/gdal/{{ gdalversion }}/gdal-{{ gdalversion }}.tar.xz
- sha256: ec0f78d9dc32352aeac6edc9c3b27a991b91f9dc6f92c452207d84431c58757d
+ sha256: 577f80e9d14ff7c90b6bfbc34201652b4546700c01543efb4f4c3050e0b3fda2
  
 build:
   number: 0
@@ -19,6 +19,7 @@ requirements:
     - make  # [not win]
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
+    - {{ stdlib("c") }}
     - swig
   host:
     - libgdal
