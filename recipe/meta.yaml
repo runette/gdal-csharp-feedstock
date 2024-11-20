@@ -7,7 +7,7 @@ package:
 
 source:
  url: http://download.osgeo.org/gdal/{{ gdalversion }}/gdal-{{ gdalversion }}.tar.xz
- sha256: 946ef444489bedbc1b04bd4c115d67ae8d3f3e4a5798d5a2f1cb2a11014105b2
+ sha256: af821a3bcf68cf085724c21c9b53605fd451d83af3c8854d8bf194638eb734a8
  
 build:
   number: 0
