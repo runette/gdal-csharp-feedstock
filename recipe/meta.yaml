@@ -1,5 +1,5 @@
 {% set version = "2.1.3" %}
-{% set gdalversion = "3.10.0" %}
+{% set gdalversion = "3.11.3" %}
 
 package:
   name: gdal-csharp
@@ -7,11 +7,11 @@ package:
 
 source:
  url: http://download.osgeo.org/gdal/{{ gdalversion }}/gdal-{{ gdalversion }}.tar.xz
- sha256: af821a3bcf68cf085724c21c9b53605fd451d83af3c8854d8bf194638eb734a8
- 
+ sha256: ba0807729fa681eed55bb6d5588bb9e4bde2b691c46e8d6d375ff5eaf789b16a
+
 build:
-  number: 1
- 
+  number: 0
+
 requirements:
   build:
     - cmake
