@@ -35,4 +35,7 @@ cp *wrap.so $PREFIX/lib || :
 cp osgeo*.nupkg $PREFIX/share/gdal
 cp OSGeo*.nupkg $PREFIX/share/gdal
 
-ctest -R "^csharp.*" -VV
+# Skip ``ctest`` when cross-compiling
+if [[ "${CONDA_BUILD_CROSS_COMPILATION:-}" != "1" || "${CROSSCOMPILING_EMULATOR:-}" != "" ]]; then
+  ctest -R "^csharp.*" -VV
+fi
