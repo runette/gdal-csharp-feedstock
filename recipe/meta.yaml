@@ -21,7 +21,7 @@ requirements:
     - {{ compiler('cxx') }}
     - {{ stdlib("c") }}
     - swig
-    - bison 
+    - bison # [ not win ]
   host:
     - libgdal
   run:
