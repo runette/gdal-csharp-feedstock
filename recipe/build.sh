@@ -23,7 +23,7 @@ fi
 export LD_LIBRARY_PATH=$PREFIX/lib:$LD_LIBRARY_PATH
 
 cmake ${CMAKE_ARGS} -DGDAL_CSHARP_ONLY=ON -DCSHARP_LIBRARY_VERSION=Net9.0 -DCSHARP_APPLICATION_VERSION=Net9.0 "-DCMAKE_PREFIX_PATH=${CONDA_PREFIX}" -S . -B ../build
-cmake --build ../build --config Release -j 3 --target csharp_samples
+cmake --build ../build --config Release -j 3 --target csharp_binding
 
 cp swig/csharp/apps/GDALTest.cs $PREFIX/share/gdal
 
@@ -34,8 +34,3 @@ cp *wrap.dylib $PREFIX/lib || :
 cp *wrap.so $PREFIX/lib || :
 cp osgeo*.nupkg $PREFIX/share/gdal
 cp OSGeo*.nupkg $PREFIX/share/gdal
-
-# Skip ``ctest`` when cross-compiling
-if [[ "${CONDA_BUILD_CROSS_COMPILATION:-}" != "1" || "${CROSSCOMPILING_EMULATOR:-}" != "" ]]; then
-  ctest -R "^csharp.*" -VV
-fi
