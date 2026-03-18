@@ -1,15 +1,17 @@
 Rem Run a separate PowerShell process because the script calls exit, so it will end the current PowerShell session.
-powershell -NoProfile -ExecutionPolicy unrestricted -Command "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; &([scriptblock]::Create((Invoke-WebRequest -UseBasicParsing 'https://dot.net/v1/dotnet-install.ps1'))) -InstallDir 'C:/Program Files/dotnet' -Version latest"
+powershell -NoProfile -ExecutionPolicy unrestricted -Command "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; &([scriptblock]::Create((Invoke-WebRequest -UseBasicParsing 'https://dot.net/v1/dotnet-install.ps1'))) -InstallDir 'C:/Program Files/dotnet' -Version 10.0"
 Rem if errorlevel 1 exit 1
 
-cmake -DGDAL_CSHARP_ONLY=ON -DCSHARP_LIBRARY_VERSION=Net9.0 -DCSHARP_APPLICATION_VERSION=Net9.0 -S . -B ../build
+cmake -DGDAL_CSHARP_ONLY=ON -DCSHARP_LIBRARY_VERSION=Net10.0 -DCSHARP_APPLICATION_VERSION=Net10.0 -S . -B ../build
 if errorlevel 1 exit 1
 
 cmake --build ../build --config Release -j 3 --target csharp_samples
 if errorlevel 1 exit 1
 
-cd ..\build\swig\csharp
+copy swig\csharp\apps\GDALTest.cs %LIBRARY_PREFIX%\share\gdal
+if errorlevel 1 exit 1
 
+cd ..\build\swig\csharp
 
 ctest -R "^csharp.*" -VV -C Release
 if errorlevel 1 exit 1
