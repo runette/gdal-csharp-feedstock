@@ -7,6 +7,7 @@ set -ex # Abort on error.
 unset PYTHON
 
 export CPPFLAGS="${CPPFLAGS} -I${PREFIX}/include"
+export OPENSSL_ENABLE_SHA1_SIGNATURES=1
 
 export DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1
 curl -sSL https://dot.net/v1/dotnet-install.sh | bash -s -- --channel 10.0
