@@ -80,7 +80,6 @@ if [[ "${target_platform}" == "linux-64" ]]; then
     "globalMetadata": {
       "projectName": "GDAL C# Bindings",
       "namespaceLayout": "nested"
-      "version": "__VERSION__"
     },
     "dest": "_site"
   }
