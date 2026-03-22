@@ -65,6 +65,9 @@ if [[ "${target_platform}" == "linux-64" ]]; then
     # Ensure runtime can find GDAL
     export LD_LIBRARY_PATH=$PREFIX/lib:$LD_LIBRARY_PATH
 
+    DLL_DIR=$(find . -name "gdal_csharp.dll" -exec dirname {} \; | head -n 1)
+    echo "Using DLL_DIR=$DLL_DIR"
+
     # Generate docfx config dynamically
     cat > docfx.json <<EOF
 {
@@ -73,7 +76,7 @@ if [[ "${target_platform}" == "linux-64" ]]; then
       "src": [
         {
           "files": ["gdal_csharp.dll", "osr_csharp.dll", "ogr_csharp.dll", "gdalconst_csharp.dll"],
-          "src": "."
+          "src": "$DLL_DIR"
         }
       ],
       "dest": "api"
