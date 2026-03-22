@@ -68,7 +68,12 @@ if [[ "${target_platform}" == "linux-64" ]]; then
 {
   "metadata": [
     {
-      "assemblies": ["$PREFIX/lib/gdal_csharp.dll", "$PREFIX/lib/ogr_csharp.dll", "$PREFIX/lib/osr_csharp.dll", "$PREFIX/lib/gdalconst_csharp.dll"],
+      "src": [
+        {
+          "files": ["gdal_csharp.dll", "osr_csharp.dll", "ogr_csharp.dll", "gdalconst_csharp.dll"],
+          "src": "."
+        }
+      ],
       "dest": "api"
     }
   ],
@@ -79,7 +84,8 @@ if [[ "${target_platform}" == "linux-64" ]]; then
     ],
     "globalMetadata": {
       "projectName": "GDAL C# Bindings",
-      "namespaceLayout": "nested"
+      "namespaceLayout": "nested",
+      "version": "${PKG_VERSION}"
     },
     "dest": "_site"
   }
