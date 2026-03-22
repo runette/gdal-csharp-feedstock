@@ -20,6 +20,7 @@ if [[ "${CXXFLAGS}" =~ $re ]]; then
     export CXXFLAGS="${BASH_REMATCH[1]}${BASH_REMATCH[2]}"
 fi
 
+if [[ "${target_platform}" == "linux-64" ]]; then
 for CSPROJ in $(find . -name "*.csproj"); do
     echo "Patching $CSPROJ"
 
@@ -29,6 +30,7 @@ for CSPROJ in $(find . -name "*.csproj"); do
     <NoWarn>$(NoWarn);1591</NoWarn>' "$CSPROJ"
     fi
 done
+fi
 
 # export DYLD_LIBRARY_PATH=$PREFIX/lib:$DYLD_LIBRARY_PATH
 export LD_LIBRARY_PATH=$PREFIX/lib:$LD_LIBRARY_PATH
