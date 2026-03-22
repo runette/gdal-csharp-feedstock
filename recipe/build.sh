@@ -101,7 +101,12 @@ EOF
 
 # ---- DEPLOY STEP ----
 
-    DOCS_REPO="https://x-access-token:${GH_PAGES_TOKEN}@github.com/ViRGIS-Team/gdal-csharp-docs.git"
+    if [[ -z "${GH_PAGES_TOKEN}" ]]; then
+        echo "ERROR: GH_PAGES_TOKEN is not set"
+        exit 1
+    fi
+
+    DOCS_REPO="https://${GH_PAGES_TOKEN}@github.com/ViRGIS-Team/gdal-csharp-docs.git"
 
     git clone --depth 1 "$DOCS_REPO" docs-repo
     cd docs-repo
