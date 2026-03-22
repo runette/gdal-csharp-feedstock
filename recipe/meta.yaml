@@ -22,6 +22,7 @@ requirements:
     - {{ stdlib("c") }}
     - swig
     - bison  # [not win]
+    - docfx  # [not win]
   host:
     - libgdal
   run:

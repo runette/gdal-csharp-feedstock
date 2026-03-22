@@ -44,3 +44,52 @@ cp *wrap.dylib $PREFIX/lib || :
 cp *wrap.so $PREFIX/lib || :
 cp osgeo*.nupkg $PREFIX/share/gdal
 cp OSGeo*.nupkg $PREFIX/share/gdal
+
+#create the docs
+
+for CSPROJ in $(find . -name "*.csproj"); do
+    echo "Patching $CSPROJ"
+
+    if ! grep -q "GenerateDocumentationFile" "$CSPROJ"; then
+        sed -i '/<\/PropertyGroup>/ i\
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>\
+    <NoWarn>$(NoWarn);1591</NoWarn>' "$CSPROJ"
+    fi
+done
+
+if [[ "${target_platform}" == "linux-64" ]]; then
+    echo "Running DocFX on linux-64"
+
+    # Ensure runtime can find GDAL
+    export LD_LIBRARY_PATH=$PREFIX/lib:$LD_LIBRARY_PATH
+
+    # Generate docfx config dynamically
+    cat > docfx.json <<EOF
+{
+  "metadata": [
+    {
+      "assemblies": ["$PREFIX/lib/gdal_csharp.dll", "$PREFIX/lib/ogr_csharp.dll", "$PREFIX/lib/osr_csharp.dll", "$PREFIX/lib/gdalconst_csharp.dll"],
+      "dest": "api"
+    }
+  ],
+  "build": {
+    "content": [
+      { "files": ["api/**.yml"] },
+      { "files": ["index.md"] }
+    ],
+    "globalMetadata": {
+      "projectName": "GDAL C# Bindings",
+      "namespaceLayout": "nested"
+      "version": "__VERSION__"
+    },
+    "dest": "_site"
+  }
+}
+EOF
+
+    docfx metadata docfx.json
+    docfx build docfx.json
+
+else
+    echo "Skipping DocFX (not linux-64: ${target_platform})"
+fi
