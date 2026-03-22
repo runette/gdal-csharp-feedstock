@@ -20,6 +20,16 @@ if [[ "${CXXFLAGS}" =~ $re ]]; then
     export CXXFLAGS="${BASH_REMATCH[1]}${BASH_REMATCH[2]}"
 fi
 
+for CSPROJ in $(find . -name "*.csproj"); do
+    echo "Patching $CSPROJ"
+
+    if ! grep -q "GenerateDocumentationFile" "$CSPROJ"; then
+        sed -i '/<\/PropertyGroup>/ i\
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>\
+    <NoWarn>$(NoWarn);1591</NoWarn>' "$CSPROJ"
+    fi
+done
+
 # export DYLD_LIBRARY_PATH=$PREFIX/lib:$DYLD_LIBRARY_PATH
 export LD_LIBRARY_PATH=$PREFIX/lib:$LD_LIBRARY_PATH
 
@@ -47,15 +57,7 @@ cp OSGeo*.nupkg $PREFIX/share/gdal
 
 #create the docs
 
-for CSPROJ in $(find . -name "*.csproj"); do
-    echo "Patching $CSPROJ"
 
-    if ! grep -q "GenerateDocumentationFile" "$CSPROJ"; then
-        sed -i '/<\/PropertyGroup>/ i\
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>\
-    <NoWarn>$(NoWarn);1591</NoWarn>' "$CSPROJ"
-    fi
-done
 
 if [[ "${target_platform}" == "linux-64" ]]; then
     echo "Running DocFX on linux-64"
