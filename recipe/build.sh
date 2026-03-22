@@ -58,9 +58,6 @@ cp osgeo*.nupkg $PREFIX/share/gdal
 cp OSGeo*.nupkg $PREFIX/share/gdal
 
 #create the docs
-
-
-
 if [[ "${target_platform}" == "linux-64" ]]; then
     echo "Running DocFX on linux-64"
 
@@ -101,6 +98,35 @@ EOF
 
     docfx metadata docfx.json
     docfx build docfx.json
+
+# ---- DEPLOY STEP ----
+
+    DOCS_REPO="https://x-access-token:${GH_PAGES_TOKEN}@github.com/ViRGIS-Team/gdal-csharp-docs.git"
+
+    git clone --depth 1 "$DOCS_REPO" docs-repo
+    cd docs-repo
+
+    # Switch to gh-pages (create if needed)
+    git checkout gh-pages || git checkout --orphan gh-pages
+
+    # Remove old content
+    rm -rf *
+
+    # Copy new site
+    cp -r ../_site/* .
+
+    # Optional: prevent Jekyll processing
+    touch .nojekyll
+
+    # Commit + push
+    git config user.name "conda-forge bot"
+    git config user.email "conda-forge@users.noreply.github.com"
+
+    git add .
+    git commit -m "Update docs from feedstock build ${BUILD_BUILDNUMBER}" || echo "No changes"
+    git push origin gh-pages
+
+    cd ..
 
 else
     echo "Skipping DocFX (not linux-64: ${target_platform})"
