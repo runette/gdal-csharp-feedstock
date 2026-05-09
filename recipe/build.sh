@@ -18,7 +18,7 @@ fi
 # export DYLD_LIBRARY_PATH=$PREFIX/lib:$DYLD_LIBRARY_PATH
 export LD_LIBRARY_PATH=$PREFIX/lib:$LD_LIBRARY_PATH
 
-cmake ${CMAKE_ARGS} -DGDAL_CSHARP_ONLY=ON -DBUILD_TESTING=ON "-DCMAKE_PREFIX_PATH=${CONDA_PREFIX}" -S . -B ../build
+cmake ${CMAKE_ARGS} -DGDAL_CSHARP_ONLY=ON -DBUILD_TESTING=ON -DCSHARP_LIBRARY_VERSION=Net10.0 -DCSHARP_APPLICATION_VERSION=Net10.0 "-DCMAKE_PREFIX_PATH=${CONDA_PREFIX}" -S . -B ../build
 cmake --build ../build --config Release -j 3 --target csharp_samples
 
 cp swig/csharp/apps/GDALTest.cs $PREFIX/share/gdal
