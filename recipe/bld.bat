@@ -1,4 +1,4 @@
-cmake -DGDAL_CSHARP_ONLY=ON -S . -B ../build
+cmake -DGDAL_CSHARP_ONLY=ON -DCSHARP_LIBRARY_VERSION=Net10.0 -DCSHARP_APPLICATION_VERSION=Net10.0 -S . -B ../build
 if errorlevel 1 exit 1
 
 cmake --build ../build --config Release -j 3 --target csharp_samples
