@@ -18,13 +18,13 @@ fi
 # export DYLD_LIBRARY_PATH=$PREFIX/lib:$DYLD_LIBRARY_PATH
 export LD_LIBRARY_PATH=$PREFIX/lib:$LD_LIBRARY_PATH
 
-cmake ${CMAKE_ARGS} -DGDAL_ENABLE_PYTHON=OFF /
-                    -DGDAL_CSHARP_ONLY=ON /
-                    -DBUILD_TESTING=ON /
+cmake ${CMAKE_ARGS} -DGDAL_ENABLE_PYTHON=OFF \
+                    -DGDAL_CSHARP_ONLY=ON \
+                    -DBUILD_TESTING=ON \
                     -DCMAKE_CROSSCOMPILING_EMULATOR:STRING="${CMAKE_CROSSCOMPILING_EMULATOR}" \
-                    -DCSHARP_LIBRARY_VERSION=Net10.0 /
-                    -DCSHARP_APPLICATION_VERSION=Net10.0 /
-                    "-DCMAKE_PREFIX_PATH=${CONDA_PREFIX}" /
+                    -DCSHARP_LIBRARY_VERSION=Net10.0 \
+                    -DCSHARP_APPLICATION_VERSION=Net10.0 \
+                    "-DCMAKE_PREFIX_PATH=${CONDA_PREFIX}" \
                     -S . -B ../build
 cmake --build ../build --config Release -j 3 --target csharp_samples
 
