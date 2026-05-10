@@ -9,11 +9,6 @@ unset PYTHON
 export CPPFLAGS="${CPPFLAGS} -I${PREFIX}/include"
 export OPENSSL_ENABLE_SHA1_SIGNATURES=1
 
-export DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1
-curl -sSL https://dot.net/v1/dotnet-install.sh | bash -s -- --channel 10.0
-
-export PATH=$PATH:~/.dotnet
-
 # Filter out -std=.* from CXXFLAGS as it disrupts checks for C++ language levels.
 re='(.*[[:space:]])\-std\=[^[:space:]]*(.*)'
 if [[ "${CXXFLAGS}" =~ $re ]]; then
@@ -23,7 +18,14 @@ fi
 # export DYLD_LIBRARY_PATH=$PREFIX/lib:$DYLD_LIBRARY_PATH
 export LD_LIBRARY_PATH=$PREFIX/lib:$LD_LIBRARY_PATH
 
-cmake ${CMAKE_ARGS} -DGDAL_CSHARP_ONLY=ON -DCSHARP_LIBRARY_VERSION=Net10.0 -DCSHARP_APPLICATION_VERSION=Net10.0 -DBUILD_TESTING=ON "-DCMAKE_PREFIX_PATH=${CONDA_PREFIX}" -S . -B ../build
+cmake ${CMAKE_ARGS} -DGDAL_ENABLE_PYTHON=OFF \
+                    -DGDAL_CSHARP_ONLY=ON \
+                    -DBUILD_TESTING=ON \
+                    -DCMAKE_CROSSCOMPILING_EMULATOR:STRING="${CMAKE_CROSSCOMPILING_EMULATOR}" \
+                    -DCSHARP_LIBRARY_VERSION=Net10.0 \
+                    -DCSHARP_APPLICATION_VERSION=Net10.0 \
+                    "-DCMAKE_PREFIX_PATH=${CONDA_PREFIX}" \
+                    -S . -B ../build
 cmake --build ../build --config Release -j 3 --target csharp_samples
 
 cp swig/csharp/apps/GDALTest.cs $PREFIX/share/gdal

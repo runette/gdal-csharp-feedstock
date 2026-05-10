@@ -1,5 +1,5 @@
-{% set version = "2.1.5" %}
-{% set gdalversion = "3.12.0" %}
+{% set version = "2.1.6" %}
+{% set gdalversion = "3.13.0" %}
 
 package:
   name: gdal-csharp
@@ -7,10 +7,13 @@ package:
 
 source:
  url: http://download.osgeo.org/gdal/{{ gdalversion }}/gdal-{{ gdalversion }}.tar.xz
- sha256: 428c19fff818bbb4136766cfee86fae2eebd3620806aa40af21844f4f0b2dbcf
+ sha256: 1c537dd2f4d66f05534ae419bc2af495c2204ce13bb266c8cbd867dd6705f0c7
+ patches:
+  # Below is a hack that will eventually break.
+  - CMP0190_disable.patch
  
 build:
-  number: 1
+  number: 0
 
 requirements:
   build:
@@ -22,6 +25,7 @@ requirements:
     - {{ stdlib("c") }}
     - swig
     - bison  # [not win]
+    - dotnet
   host:
     - libgdal
   run:
