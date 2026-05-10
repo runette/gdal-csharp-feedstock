@@ -8,7 +8,7 @@ package:
 source:
  url: http://download.osgeo.org/gdal/{{ gdalversion }}/gdal-{{ gdalversion }}.tar.xz
  sha256: 1c537dd2f4d66f05534ae419bc2af495c2204ce13bb266c8cbd867dd6705f0c7
-patches:
+ patches:
   # Below is a hack that will eventually break.
   - CMP0190_disable.patch
  
