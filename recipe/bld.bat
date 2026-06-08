@@ -15,17 +15,20 @@ if errorlevel 1 exit 1
 copy /B Release\*.dll %LIBRARY_BIN%
 if errorlevel 1 exit 1
 
-xcopy /B /i osgeo*.nupkg %LIBRARY_PREFIX%\share\gdal
+mkdir "%PREFIX%\share\gdal\csharp\const"
+if errorlevel 1 exit 1
+mkdir "%PREFIX%\share\gdal\csharp\gdal"
+if errorlevel 1 exit 1
+mkdir "%PREFIX%\share\gdal\csharp\ogr"
+if errorlevel 1 exit 1
+mkdir "%PREFIX%\share\gdal\csharp\osr"
 if errorlevel 1 exit 1
 
-xcopy /s /y const "%PREFIX%\share\gdal\csharp"
+xcopy /s /e /i /y const "%PREFIX%\share\gdal\csharp\const"
 if errorlevel 1 exit 1
-
-xcopy /s /y gdal "%PREFIX%\share\gdal\csharp"
+xcopy /s /e /i /y gdal  "%PREFIX%\share\gdal\csharp\gdal"
 if errorlevel 1 exit 1
-
-xcopy /s /y ogr "%PREFIX%\share\gdal\csharp"
+xcopy /s /e /i /y ogr   "%PREFIX%\share\gdal\csharp\ogr"
 if errorlevel 1 exit 1
-
-xcopy /s /y osr "%PREFIX%\share\gdal\csharp"
+xcopy /s /e /i /y osr   "%PREFIX%\share\gdal\csharp\osr"
 if errorlevel 1 exit 1
