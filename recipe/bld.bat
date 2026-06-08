@@ -17,3 +17,18 @@ if errorlevel 1 exit 1
 
 xcopy /B /i osgeo*.nupkg %LIBRARY_PREFIX%\share\gdal
 if errorlevel 1 exit 1
+
+@echo off
+setlocal
+
+powershell -NoProfile -Command ^
+  "Compress-Archive -Path const,gdal,ogr,osr -DestinationPath csharp-source.zip -Force"
+
+if errorlevel 1 exit /b 1
+
+if not exist "%PREFIX%\share\gdal" (
+    mkdir "%PREFIX%\share\gdal"
+)
+
+copy /Y csharp-source.zip "%PREFIX%\share\gdal\csharp-source.zip"
+if errorlevel 1 exit /b 1
