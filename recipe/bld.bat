@@ -15,6 +15,9 @@ if errorlevel 1 exit 1
 copy /B Release\*.dll %LIBRARY_BIN%
 if errorlevel 1 exit 1
 
+xcopy /B /i osgeo*.nupkg %LIBRARY_PREFIX%\share\gdal
+if errorlevel 1 exit 1
+
 @echo off
 setlocal
 
