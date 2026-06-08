@@ -18,14 +18,14 @@ if errorlevel 1 exit 1
 xcopy /B /i osgeo*.nupkg %LIBRARY_PREFIX%\share\gdal
 if errorlevel 1 exit 1
 
-xcopy /S /Y const "%PREFIX%\share\gdal\csharp"
+xcopy /s /y const "%PREFIX%\share\gdal\csharp"
 if errorlevel 1 exit 1
 
-xcopy /S /Y gdal "%PREFIX%\share\gdal\csharp"
+xcopy /s /y gdal "%PREFIX%\share\gdal\csharp"
 if errorlevel 1 exit 1
 
-xcopy /S /Y ogr "%PREFIX%\share\gdal\csharp"
+xcopy /s /y ogr "%PREFIX%\share\gdal\csharp"
 if errorlevel 1 exit 1
 
-xcopy /S /Y osr "%PREFIX%\share\gdal\csharp"
+xcopy /s /y osr "%PREFIX%\share\gdal\csharp"
 if errorlevel 1 exit 1
