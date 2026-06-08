@@ -15,20 +15,17 @@ if errorlevel 1 exit 1
 copy /B Release\*.dll %LIBRARY_BIN%
 if errorlevel 1 exit 1
 
-mkdir "%PREFIX%\share\gdal\csharp\const"
-if errorlevel 1 exit 1
-mkdir "%PREFIX%\share\gdal\csharp\gdal"
-if errorlevel 1 exit 1
-mkdir "%PREFIX%\share\gdal\csharp\ogr"
-if errorlevel 1 exit 1
-mkdir "%PREFIX%\share\gdal\csharp\osr"
-if errorlevel 1 exit 1
+@echo off
+setlocal
 
-xcopy /s /e /i /y const "%PREFIX%\share\gdal\csharp\const"
-if errorlevel 1 exit 1
-xcopy /s /e /i /y gdal  "%PREFIX%\share\gdal\csharp\gdal"
-if errorlevel 1 exit 1
-xcopy /s /e /i /y ogr   "%PREFIX%\share\gdal\csharp\ogr"
-if errorlevel 1 exit 1
-xcopy /s /e /i /y osr   "%PREFIX%\share\gdal\csharp\osr"
-if errorlevel 1 exit 1
+powershell -NoProfile -Command ^
+  "Compress-Archive -Path const,gdal,ogr,osr -DestinationPath csharp-source.zip -Force"
+
+if errorlevel 1 exit /b 1
+
+if not exist "%PREFIX%\share\gdal" (
+    mkdir "%PREFIX%\share\gdal"
+)
+
+copy /Y csharp-source.zip "%PREFIX%\share\gdal\csharp-source.zip"
+if errorlevel 1 exit /b 1
